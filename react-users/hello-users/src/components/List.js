@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import axios from 'axios'
 
 class List extends Component {
 
@@ -11,6 +12,39 @@ class List extends Component {
             errorMsg: null
         }
     }
+
+    componentWillReceiveProps (nextProps) {//父组件更新，传过来了新属性
+
+        //更新为请求状态
+        this.setState({
+            firstView: false,
+            loading: true
+        })
+
+        const {searchName} = nextProps
+        //发送ajax请求
+        const url = `https://api.github.com/search/users?q=${searchName}`
+        axios.get(url)
+            .then(response => {
+                const items = response.data.items
+                const users = items.map(item => {
+                    return {html_url: item.html_url, avatar_url: item.avatar_url, login: item.login}
+                })
+                //更新为成功状态
+                this.setState({
+                    loading: false,
+                    users
+                })
+            })
+            .catch(error => {
+                //更新为失败状态
+                this.setState({
+                    loading: false,
+                    errorMsg: error.message
+                })
+            })
+    }
+
     render () {
 
         const {firstView, loading, users, errorMsg} = this.state
@@ -23,7 +57,7 @@ class List extends Component {
         } else {
 
             const userList = users.map((user, index) => (
-                <div className="card">
+                <div className="card" key={index}>
                     <a href={user.html_url} target="_blank">
                         <img src={user.avatar_url} style={{width: '100px'}}/>
                     </a>

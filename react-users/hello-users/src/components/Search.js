@@ -1,4 +1,5 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
+
 
 class Search extends Component {
 
@@ -6,7 +7,7 @@ class Search extends Component {
         const searchName = this.refs.searchName.value.trim()
         if(searchName) {
             //将search交给App
-
+            this.props.setSearchName(searchName)
         }
     }
 
@@ -19,8 +20,8 @@ class Search extends Component {
         )
     }
 }
-Search.propType = {
-    setSearchName: Propotyprs
+Search.propTypes = {
+    setSearchName: PropTypes.func.isRequired
 }
 
 export default Search
