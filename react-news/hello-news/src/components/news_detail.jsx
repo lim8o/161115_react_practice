@@ -19,7 +19,19 @@ class NewsDetail extends Component {
     }
 
     componentWillMount () {
-        const uniquekey = this.props.params.news_id
+       this.showDetail(this.props)
+    }
+
+    //当收到父组件传过来新的prop时调用
+    componentWillReceiveProps(nextProps) {
+        this.showDetail(nextProps)
+    }
+
+    /*
+    * 显示新闻详情
+    * */
+    showDetail = (props) => {
+        const uniquekey = props.params.news_id
         const url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnewsitem&uniquekey=${uniquekey}`
         axios.get(url)
             .then(response => {
